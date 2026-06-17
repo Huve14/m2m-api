@@ -25,8 +25,9 @@ const {
   ZOHO_WORKSPACE_ID,
   // Map survey names → Zoho View IDs
   ZOHO_VIEW_ID_PNP_FNB,     // PnP FNB Campaign 2026 table
-  PORT = 3000,
 } = process.env;
+
+const PORT = process.env.PORT || 3000;
 
 // ── Survey → View ID lookup ───────────────────────────────────────
 const SURVEY_VIEW_MAP = {
