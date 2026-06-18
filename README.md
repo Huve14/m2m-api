@@ -14,8 +14,10 @@ POST /api/form_master_uploads/zoho?X-Api-Key=YOUR_KEY&survey=PnP%20FNB%20Campaig
 |---|---|
 | `server.js` | Express API server |
 | `PnP_FNB_Survey_2026.jsx` | React survey app (drop into Vite project) |
+| `frontend/` | Vite wrapper for deploying the survey frontend to Vercel |
 | `.env.example` | Environment variable template |
 | `railway.toml` | Railway deployment config |
+| `vercel.json` | Vercel config that builds only the frontend |
 
 ## Deploy (Railway)
 
@@ -23,6 +25,20 @@ POST /api/form_master_uploads/zoho?X-Api-Key=YOUR_KEY&survey=PnP%20FNB%20Campaig
 2. Connect to [Railway](https://railway.app) → New Project → Deploy from GitHub
 3. Add environment variables from `.env.example`
 4. Railway gives you a live URL — update `M2M_API_URL` in the React app
+
+## Deploy Frontend (Vercel)
+
+Deploy the survey frontend to Vercel while keeping this API on Railway.
+
+1. Import `https://github.com/Huve14/m2m-api` into Vercel
+2. Keep the repository root as the project root
+3. Vercel will use `vercel.json` to build `frontend/` and output `frontend/dist`
+4. Add frontend environment variables:
+   - `VITE_API_URL=https://m2m-api-production.up.railway.app`
+   - `VITE_API_KEY=YOUR_API_KEY`
+5. Deploy
+
+The frontend build uses `frontend/src/main.jsx`, which imports the shared survey component from `PnP_FNB_Survey_2026.jsx`.
 
 ## Environment Variables
 
