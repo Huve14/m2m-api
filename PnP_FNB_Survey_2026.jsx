@@ -12,311 +12,643 @@ const USERS = [{"id":784,"userName":"PnP Franchise Vryheid","email":"pnpfranchis
 
 // ─── STYLES ──────────────────────────────────────────────────────────────────
 const css = `
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap');
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --fnb-red: #E63329;
-    --fnb-dark: #1A0A00;
-    --fnb-amber: #F5A623;
-    --fnb-green: #2DBD6E;
-    --fnb-grey: #F4F4F4;
-    --fnb-mid: #888;
-    --fnb-white: #FFFFFF;
-    --radius: 14px;
-    --shadow: 0 4px 24px rgba(0,0,0,0.10);
-    --shadow-lg: 0 8px 40px rgba(230,51,41,0.13);
+    --brand-red: #E63329;
+    --brand-red-dark: #B81F18;
+    --ink: #211A17;
+    --muted: #756E6A;
+    --line: #E8E2DE;
+    --paper: #FFFFFF;
+    --field: #F8F7F5;
+    --wash: #F5F1ED;
+    --mint: #E6F7EF;
+    --green: #168C58;
+    --amber: #F2B84B;
+    --teal: #1B7C83;
+    --pnp-blue: #004B73;
+    --pnp-pink: #C70A54;
+    --shadow: 0 18px 60px rgba(33, 26, 23, 0.10);
+    --radius: 18px;
   }
 
-  body { font-family: 'DM Sans', sans-serif; background: #F7F3EF; color: var(--fnb-dark); }
-
-  .app-wrap {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background: linear-gradient(160deg, #fff5f4 0%, #F7F3EF 60%, #fff 100%);
+  html { background: var(--wash); }
+  body {
+    min-width: 320px;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background:
+      linear-gradient(135deg, rgba(230, 51, 41, 0.06), transparent 42%),
+      linear-gradient(180deg, #FFFFFF 0%, var(--wash) 42%, #F7F8F7 100%);
+    color: var(--ink);
   }
+  button, input, textarea { font: inherit; }
 
-  /* ── LOGIN ── */
+  .app-wrap { min-height: 100vh; display: flex; flex-direction: column; }
+
+  .brand-lockup { display: flex; align-items: center; gap: 14px; min-width: 0; }
+  .pnp-logo {
+    display: inline-flex;
+    align-items: center;
+    height: 48px;
+    flex-shrink: 0;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0;
+  }
+  .pnp-box {
+    width: 46px;
+    height: 46px;
+    display: grid;
+    place-items: center;
+    border-radius: 7px;
+    color: #fff;
+    font-size: 35px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+  .pnp-box.blue { background: var(--pnp-blue); }
+  .pnp-box.pink { background: var(--pnp-pink); }
+  .pnp-word,
+  .pnp-n {
+    display: inline-block;
+    font-size: 39px;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+  }
+  .pnp-word.pick { color: var(--pnp-blue); margin-left: 2px; margin-right: 5px; }
+  .pnp-word.pay { color: var(--pnp-pink); margin-left: 2px; }
+  .pnp-n { color: var(--pnp-pink); margin: 0 8px 0 2px; }
+  .pnp-logo.compact { height: 38px; }
+  .pnp-logo.compact .pnp-box {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    font-size: 30px;
+  }
+  .pnp-logo.compact .pnp-word { display: none; }
+  .pnp-logo.compact .pnp-n {
+    font-size: 33px;
+    margin: 0 9px;
+  }
+  .brand-copy { min-width: 0; }
+  .brand-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .brand-sub { color: var(--muted); font-size: 12px; margin-top: 2px; }
+
   .login-screen {
     min-height: 100vh;
     display: grid;
     place-items: center;
-    background: linear-gradient(135deg, #1A0A00 0%, #3D1A00 50%, #E63329 100%);
     padding: 24px;
+    background:
+      linear-gradient(150deg, rgba(33, 26, 23, 0.94), rgba(76, 35, 30, 0.94)),
+      radial-gradient(circle at 24% 18%, rgba(230, 51, 41, 0.4), transparent 32%);
   }
   .login-card {
-    background: #fff;
-    border-radius: 24px;
-    padding: 48px 40px 40px;
     width: 100%;
     max-width: 440px;
-    box-shadow: 0 32px 80px rgba(0,0,0,0.35);
+    background: rgba(255, 255, 255, 0.97);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 22px;
+    padding: 28px;
+    box-shadow: 0 28px 90px rgba(0, 0, 0, 0.35);
   }
-  .login-logo-row {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 32px;
+  .login-logo-row { margin-bottom: 30px; }
+  .login-card .brand-lockup { gap: 12px; }
+  .login-card .pnp-logo { height: 44px; }
+  .login-card .pnp-box {
+    width: 42px;
+    height: 42px;
+    font-size: 32px;
   }
-  .login-logo-badge {
-    width: 52px; height: 52px;
-    background: var(--fnb-red);
-    border-radius: 14px;
-    display: grid; place-items: center;
-    color: #fff; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px;
-    letter-spacing: -1px;
-    flex-shrink: 0;
+  .login-card .pnp-word,
+  .login-card .pnp-n { font-size: 35px; }
+  .login-card .pnp-word.pick { margin-right: 4px; }
+  .login-card .pnp-n { margin: 0 6px 0 1px; }
+  .login-card .brand-name {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
   }
-  .login-logo-text { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; line-height: 1.2; color: var(--fnb-dark); }
-  .login-logo-text span { color: var(--fnb-red); }
-  .login-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 26px; margin-bottom: 6px; }
-  .login-sub { color: var(--fnb-mid); font-size: 14px; margin-bottom: 32px; }
-  .field-group { margin-bottom: 18px; }
-  .field-group label { display: block; font-size: 12px; font-weight: 600; letter-spacing: .5px; text-transform: uppercase; color: #555; margin-bottom: 6px; }
-  .field-group input, .field-group select {
-    width: 100%;
-    padding: 13px 16px;
-    border: 2px solid #E8E8E8;
-    border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    transition: border-color .2s;
-    background: #fafafa;
-    color: var(--fnb-dark);
-    outline: none;
+  .login-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 30px;
+    line-height: 1.05;
+    margin-bottom: 8px;
   }
-  .field-group input:focus, .field-group select:focus { border-color: var(--fnb-red); background: #fff; }
-  .btn-primary {
-    width: 100%;
-    padding: 15px;
-    background: var(--fnb-red);
-    color: #fff;
-    border: none;
+  .login-sub { color: var(--muted); font-size: 14px; margin-bottom: 26px; }
+  .login-error {
+    background: #FFF0EF;
+    border: 1px solid #FFC4BE;
+    color: var(--brand-red-dark);
     border-radius: 12px;
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    cursor: pointer;
-    transition: transform .15s, box-shadow .15s, background .2s;
-    letter-spacing: .3px;
+    padding: 11px 13px;
+    font-size: 13px;
+    margin-bottom: 16px;
   }
-  .btn-primary:hover { background: #c9211a; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(230,51,41,.35); }
-  .btn-primary:active { transform: translateY(0); }
-  .btn-primary:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
-  .login-error { background: #fff0ef; border: 1px solid #ffb5b0; color: #c0392b; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 16px; }
-
-  /* ── TOP NAV ── */
-  .topnav {
+  .field-group { margin-bottom: 16px; }
+  .field-group label,
+  .f-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #5F5753;
+    margin-bottom: 8px;
+  }
+  .field-group input,
+  .f-input,
+  .f-select,
+  .f-textarea {
+    width: 100%;
+    min-height: 48px;
+    padding: 13px 14px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--field);
+    color: var(--ink);
+    font-size: 15px;
+    outline: none;
+    transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+  }
+  .field-group input:focus,
+  .f-input:focus,
+  .f-select:focus,
+  .f-textarea:focus {
     background: #fff;
-    border-bottom: 2px solid #F0E8E8;
-    padding: 0 28px;
-    height: 62px;
+    border-color: var(--brand-red);
+    box-shadow: 0 0 0 4px rgba(230, 51, 41, 0.10);
+  }
+  .f-input.error, .f-select.error { border-color: var(--brand-red); background: #FFF7F6; }
+  .f-textarea { resize: vertical; min-height: 110px; line-height: 1.5; }
+  .f-required { color: var(--brand-red); margin-left: 2px; }
+  .f-error { color: var(--brand-red-dark); font-size: 12px; font-weight: 700; margin-top: 4px; }
+
+  .btn-primary,
+  .btn-submit,
+  .btn-new {
+    min-height: 48px;
+    border: none;
+    border-radius: 14px;
+    background: var(--brand-red);
+    color: #fff;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
+  }
+  .btn-primary { width: 100%; padding: 0 18px; font-size: 15px; }
+  .btn-primary:hover,
+  .btn-submit:hover,
+  .btn-new:hover {
+    background: var(--brand-red-dark);
+    box-shadow: 0 14px 30px rgba(230, 51, 41, 0.25);
+    transform: translateY(-1px);
+  }
+  .btn-primary:disabled,
+  .btn-submit:disabled {
+    background: #C9C2BE;
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .btn-secondary {
+    min-height: 48px;
+    padding: 0 18px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: #fff;
+    color: var(--ink);
+    font-weight: 800;
+    cursor: pointer;
+  }
+  .btn-secondary:hover { border-color: var(--ink); }
+
+  .topnav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    min-height: 70px;
+    padding: 12px 22px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    position: sticky; top: 0; z-index: 100;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    gap: 14px;
+    background: rgba(255, 255, 255, 0.88);
+    border-bottom: 1px solid rgba(232, 226, 222, 0.85);
+    backdrop-filter: blur(18px);
   }
-  .nav-brand { display: flex; align-items: center; gap: 10px; }
-  .nav-badge { width: 34px; height: 34px; background: var(--fnb-red); border-radius: 8px; display: grid; place-items: center; color: #fff; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 13px; }
-  .nav-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; }
-  .nav-title span { color: var(--fnb-red); }
-  .nav-right { display: flex; align-items: center; gap: 16px; }
-  .nav-user { font-size: 13px; color: #666; font-weight: 500; }
-  .nav-user strong { color: var(--fnb-dark); }
+  .nav-brand { min-width: 0; }
+  .nav-right { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .nav-user {
+    max-width: 260px;
+    color: var(--muted);
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .nav-user strong { color: var(--ink); }
   .btn-logout {
-    padding: 7px 16px;
-    background: transparent;
-    border: 2px solid #E8E8E8;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    color: #666;
-    cursor: pointer;
-    transition: all .2s;
-  }
-  .btn-logout:hover { border-color: var(--fnb-red); color: var(--fnb-red); }
-
-  /* ── MAIN ── */
-  .main-body { padding: 32px 24px 64px; max-width: 760px; margin: 0 auto; width: 100%; }
-
-  .page-header { margin-bottom: 28px; }
-  .page-header h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 26px; margin-bottom: 4px; }
-  .page-header p { color: #888; font-size: 14px; }
-
-  /* progress bar */
-  .prog-bar-wrap { background: #eee; border-radius: 99px; height: 6px; margin-bottom: 24px; overflow: hidden; }
-  .prog-bar { height: 100%; background: var(--fnb-red); border-radius: 99px; transition: width .4s ease; }
-  .prog-label { font-size: 12px; color: #999; margin-bottom: 8px; }
-
-  /* ── CARD ── */
-  .card {
+    min-height: 38px;
+    padding: 0 14px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
     background: #fff;
-    border-radius: var(--radius);
-    padding: 28px 28px 24px;
-    box-shadow: var(--shadow);
-    margin-bottom: 16px;
+    color: var(--ink);
+    font-weight: 800;
+    cursor: pointer;
   }
-  .card-section-title {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 13px;
-    letter-spacing: .6px;
+
+  .main-body {
+    width: 100%;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 28px 22px 96px;
+  }
+  .survey-shell {
+    display: grid;
+    grid-template-columns: minmax(230px, 280px) minmax(0, 1fr);
+    gap: 22px;
+    align-items: start;
+  }
+  .survey-aside {
+    position: sticky;
+    top: 94px;
+    padding: 22px;
+    border-radius: var(--radius);
+    background: #fff;
+    border: 1px solid rgba(232, 226, 222, 0.9);
+    box-shadow: var(--shadow);
+  }
+  .page-header { margin-bottom: 18px; }
+  .eyebrow {
+    color: var(--brand-red);
+    font-size: 11px;
+    font-weight: 800;
     text-transform: uppercase;
-    color: var(--fnb-red);
-    margin-bottom: 18px;
+    margin-bottom: 10px;
+  }
+  .page-header h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 34px;
+    line-height: 1.02;
+    margin-bottom: 10px;
+  }
+  .page-header p { color: var(--muted); font-size: 14px; line-height: 1.45; }
+
+  .stats-bar { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 20px; }
+  .stat-chip {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 58px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--field);
+  }
+  .stat-num {
+    order: 2;
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--brand-red);
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .stat-lbl { order: 1; color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; }
+
+  .step-panel { min-width: 0; }
+  .mobile-step-header { display: none; }
+  .step-tabs {
+    display: grid;
     gap: 8px;
+    margin-top: 22px;
   }
-  .card-section-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: #F0E8E8;
-  }
-
-  /* fields */
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .form-grid.full { grid-template-columns: 1fr; }
-  @media (max-width: 540px) { .form-grid { grid-template-columns: 1fr; } }
-
-  .f-group { display: flex; flex-direction: column; gap: 5px; }
-  .f-group.span2 { grid-column: span 2; }
-  @media (max-width: 540px) { .f-group.span2 { grid-column: span 1; } }
-  .f-label { font-size: 12px; font-weight: 600; letter-spacing: .4px; color: #555; text-transform: uppercase; }
-  .f-required { color: var(--fnb-red); margin-left: 2px; }
-  .f-input, .f-select, .f-textarea {
-    padding: 11px 14px;
-    border: 2px solid #E8E8E8;
-    border-radius: 9px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    color: var(--fnb-dark);
-    background: #fafafa;
-    transition: border-color .2s, background .2s;
-    outline: none;
+  .step-tab {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     width: 100%;
-  }
-  .f-input:focus, .f-select:focus, .f-textarea:focus { border-color: var(--fnb-red); background: #fff; }
-  .f-input.error, .f-select.error { border-color: #e74c3c; }
-  .f-textarea { resize: vertical; min-height: 80px; }
-
-  /* radio / checkbox groups */
-  .radio-group, .checkbox-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
-  .radio-opt, .check-opt {
-    display: flex; align-items: center; gap: 7px;
-    padding: 9px 14px;
-    border: 2px solid #E8E8E8;
-    border-radius: 8px;
+    min-height: 42px;
+    padding: 8px 10px;
+    border: 1px solid transparent;
+    border-radius: 13px;
+    background: transparent;
+    color: var(--muted);
+    text-align: left;
+    font-weight: 800;
     cursor: pointer;
-    font-size: 14px;
-    transition: all .2s;
-    user-select: none;
-    background: #fafafa;
   }
-  .radio-opt.selected, .check-opt.selected { border-color: var(--fnb-red); background: #fff5f4; color: var(--fnb-red); font-weight: 600; }
+  .step-tab.active { color: var(--ink); background: #FFF5F4; border-color: #FFD7D2; }
+  .step-index {
+    width: 24px;
+    height: 24px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: #EEE9E5;
+    color: var(--muted);
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+  .step-tab.active .step-index { background: var(--brand-red); color: #fff; }
+  .step-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .prog-bar-wrap {
+    height: 8px;
+    border-radius: 999px;
+    background: #EEE8E3;
+    overflow: hidden;
+    margin: 16px 0 4px;
+  }
+  .prog-bar { height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--brand-red), var(--teal)); transition: width .25s ease; }
+  .prog-label { color: var(--muted); font-size: 12px; font-weight: 700; }
+
+  .card {
+    background: #fff;
+    border: 1px solid rgba(232, 226, 222, 0.9);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+  }
+  .card-section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 22px;
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--ink);
+    font-size: 21px;
+    font-weight: 700;
+  }
+  .card-section-title::before {
+    content: '';
+    width: 8px;
+    height: 28px;
+    border-radius: 999px;
+    background: var(--brand-red);
+    flex-shrink: 0;
+  }
+  .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .form-grid.full { grid-template-columns: 1fr; }
+  .f-group { display: flex; flex-direction: column; gap: 0; min-width: 0; }
+  .f-group + .f-group.block-gap { margin-top: 18px; }
+  .f-group.span2 { grid-column: span 2; }
+
+  .radio-group, .checkbox-group { display: flex; flex-wrap: wrap; gap: 10px; }
+  .radio-opt, .check-opt {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 46px;
+    padding: 11px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    user-select: none;
+    transition: border-color .18s ease, background .18s ease, color .18s ease, transform .18s ease;
+  }
+  .radio-opt:hover, .check-opt:hover { border-color: #D1C7C0; transform: translateY(-1px); }
+  .radio-opt.selected, .check-opt.selected {
+    border-color: var(--brand-red);
+    background: #FFF3F2;
+    color: var(--brand-red-dark);
+  }
   .radio-opt input, .check-opt input { display: none; }
   .radio-dot {
-    width: 14px; height: 14px; border-radius: 50%;
-    border: 2px solid #ccc;
-    display: grid; place-items: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid #C8C0BA;
+    display: grid;
+    place-items: center;
     flex-shrink: 0;
-    transition: border-color .2s;
   }
-  .radio-opt.selected .radio-dot { border-color: var(--fnb-red); }
-  .radio-dot::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--fnb-red); opacity: 0; transition: opacity .2s; }
+  .radio-dot::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--brand-red);
+    opacity: 0;
+  }
+  .radio-opt.selected .radio-dot { border-color: var(--brand-red); }
   .radio-opt.selected .radio-dot::after { opacity: 1; }
 
-  /* upload area */
   .upload-area {
-    border: 2px dashed #E0D8D8;
-    border-radius: 10px;
-    padding: 20px;
-    text-align: center;
+    min-height: 112px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    border: 1px dashed #CFC6C0;
+    border-radius: 16px;
+    background: var(--field);
     cursor: pointer;
-    transition: border-color .2s, background .2s;
-    background: #fafafa;
+    transition: border-color .18s ease, background .18s ease;
   }
-  .upload-area:hover { border-color: var(--fnb-red); background: #fff5f4; }
-  .upload-area.has-file { border-color: var(--fnb-green); background: #f0fdf6; }
-  .upload-icon { font-size: 24px; margin-bottom: 6px; }
-  .upload-text { font-size: 13px; color: #888; }
-  .upload-text strong { color: var(--fnb-dark); }
-
-  /* submit section */
-  .submit-row { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
-  .btn-secondary {
-    padding: 13px 24px;
+  .upload-area:hover { border-color: var(--brand-red); background: #FFF8F7; }
+  .upload-area.has-file { border-color: var(--green); background: var(--mint); }
+  .upload-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
     background: #fff;
-    border: 2px solid #E8E8E8;
-    border-radius: 10px;
-    font-family: 'Syne', sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    color: #666;
-    transition: all .2s;
+    color: var(--brand-red);
+    font-weight: 900;
+    flex-shrink: 0;
   }
-  .btn-secondary:hover { border-color: var(--fnb-dark); color: var(--fnb-dark); }
-  .btn-submit {
-    padding: 13px 32px;
-    background: var(--fnb-red);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
-    cursor: pointer;
-    transition: all .2s;
-    display: flex; align-items: center; gap: 8px;
+  .upload-text { color: var(--muted); font-size: 13px; line-height: 1.4; }
+  .upload-text strong { color: var(--ink); display: block; font-size: 14px; margin-bottom: 2px; }
+
+  .review-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .review-item {
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--field);
   }
-  .btn-submit:hover { background: #c9211a; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(230,51,41,.3); }
-  .btn-submit:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
+  .review-label { color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; }
+  .review-value { color: var(--ink); font-size: 14px; font-weight: 700; overflow-wrap: anywhere; }
+
+  .submit-row {
+    position: sticky;
+    bottom: 0;
+    z-index: 80;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 16px;
+    padding: 14px 0 0;
+    background: linear-gradient(180deg, rgba(245, 241, 237, 0), var(--wash) 30%);
+  }
+  .submit-row .btn-secondary,
+  .submit-row .btn-submit { flex: 1; }
+  .btn-submit { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 0 18px; }
   .spin { display: inline-block; animation: spin .7s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* success/error toast */
   .toast {
-    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-    padding: 14px 24px; border-radius: 12px;
-    font-weight: 600; font-size: 14px; z-index: 999;
-    animation: slideup .3s ease; box-shadow: 0 8px 32px rgba(0,0,0,.2);
-    display: flex; align-items: center; gap: 10px; white-space: nowrap;
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
+    width: min(calc(100vw - 32px), 520px);
+    padding: 14px 16px;
+    border-radius: 14px;
+    color: #fff;
+    font-weight: 800;
+    font-size: 14px;
+    z-index: 999;
+    box-shadow: 0 16px 40px rgba(33, 26, 23, 0.20);
+    animation: slideup .25s ease;
   }
-  .toast.success { background: var(--fnb-green); color: #fff; }
-  .toast.error { background: var(--fnb-red); color: #fff; }
-  @keyframes slideup { from { opacity: 0; transform: translate(-50%, 20px); } to { opacity: 1; transform: translate(-50%, 0); } }
+  .toast.success { background: var(--green); }
+  .toast.error { background: var(--brand-red); }
+  @keyframes slideup { from { opacity: 0; transform: translate(-50%, 16px); } to { opacity: 1; transform: translate(-50%, 0); } }
 
-  /* success screen */
-  .success-screen { text-align: center; padding: 60px 24px; }
-  .success-icon { font-size: 64px; margin-bottom: 16px; }
-  .success-screen h2 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 28px; margin-bottom: 8px; }
-  .success-screen p { color: #888; font-size: 15px; margin-bottom: 28px; }
-  .btn-new { padding: 13px 28px; background: var(--fnb-red); color: #fff; border: none; border-radius: 10px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; transition: all .2s; }
-  .btn-new:hover { background: #c9211a; }
-
-  /* stats bar */
-  .stats-bar {
-    display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;
-  }
-  .stat-chip {
+  .success-screen {
+    max-width: 560px;
+    margin: 40px auto 0;
+    padding: 34px 24px;
+    text-align: center;
     background: #fff;
-    border: 2px solid #F0E8E8;
-    border-radius: 10px;
-    padding: 10px 16px;
-    display: flex; flex-direction: column; gap: 2px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
   }
-  .stat-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 22px; color: var(--fnb-red); }
-  .stat-lbl { font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: .4px; }
+  .success-icon {
+    width: 74px;
+    height: 74px;
+    margin: 0 auto 18px;
+    display: grid;
+    place-items: center;
+    border-radius: 22px;
+    background: var(--mint);
+    color: var(--green);
+    font-size: 36px;
+    font-weight: 900;
+  }
+  .success-screen h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 30px;
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+  .success-screen p { color: var(--muted); font-size: 15px; line-height: 1.5; margin-bottom: 22px; }
+  .btn-new { padding: 0 22px; }
+
+  @media (max-width: 820px) {
+    .topnav { min-height: 64px; padding: 10px 14px; }
+    .topnav .brand-copy { display: none; }
+    .topnav .pnp-logo { height: 36px; }
+    .topnav .pnp-logo .pnp-box {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      font-size: 28px;
+    }
+    .topnav .pnp-logo .pnp-word { display: none; }
+    .topnav .pnp-logo .pnp-n {
+      font-size: 31px;
+      margin: 0 8px;
+    }
+    .nav-user { display: none; }
+    .main-body { padding: 18px 14px 106px; }
+    .survey-shell { display: block; }
+    .survey-aside { display: none; }
+    .mobile-step-header {
+      display: block;
+      margin-bottom: 14px;
+      padding: 14px;
+      border-radius: 16px;
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+    .page-header h1 { font-size: 28px; }
+    .mobile-step-title { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 10px; }
+    .mobile-step-title strong { font-family: 'Space Grotesk', sans-serif; font-size: 18px; }
+    .mobile-step-title span { color: var(--brand-red); font-weight: 900; font-size: 12px; }
+    .card { padding: 18px; border-radius: 16px; box-shadow: 0 12px 40px rgba(33, 26, 23, 0.09); }
+    .card-section-title { font-size: 19px; margin-bottom: 18px; }
+    .form-grid { grid-template-columns: 1fr; gap: 14px; }
+    .f-group.span2 { grid-column: span 1; }
+    .radio-group { display: grid; grid-template-columns: 1fr; gap: 9px; }
+    .radio-opt { width: 100%; border-radius: 14px; justify-content: flex-start; }
+    .review-grid { grid-template-columns: 1fr; }
+    .submit-row {
+      position: fixed;
+      left: 0;
+      right: 0;
+      padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
+      background: rgba(255, 255, 255, 0.92);
+      border-top: 1px solid var(--line);
+      backdrop-filter: blur(18px);
+    }
+    .btn-secondary, .btn-submit { min-height: 52px; }
+  }
+
+  @media (max-width: 430px) {
+    .login-screen { padding: 14px; place-items: stretch; align-items: center; }
+    .login-card { padding: 22px; align-self: center; }
+    .login-title { font-size: 27px; }
+    .btn-logout { width: 64px; padding: 0; font-size: 12px; }
+    .page-header h1 { font-size: 25px; }
+    .upload-area { min-height: 98px; }
+  }
 
 `;
 
 // ─── COMPONENTS ─────────────────────────────────────────────────────────────
+
+const SURVEY_STEPS = [
+  { id: "task", label: "Task" },
+  { id: "customer", label: "Customer" },
+  { id: "banking", label: "Banking" },
+  { id: "handover", label: "Handover" },
+  { id: "photos", label: "Photos" },
+  { id: "review", label: "Review" },
+];
+
+function PickNPayLogo({ compact = false }) {
+  return (
+    <div className={`pnp-logo${compact ? " compact" : ""}`} aria-label="Pick n Pay">
+      <span className="pnp-box blue">P</span>
+      <span className="pnp-word pick">ick</span>
+      <span className="pnp-n">n</span>
+      <span className="pnp-box pink">P</span>
+      <span className="pnp-word pay">ay</span>
+    </div>
+  );
+}
+
+function BrandLockup({ compactLogo = false }) {
+  return (
+    <div className="brand-lockup">
+      <PickNPayLogo compact={compactLogo} />
+      <div className="brand-copy">
+        <div className="brand-name">FNB Campaign 2026</div>
+        <div className="brand-sub">Promoter Survey 2026</div>
+      </div>
+    </div>
+  );
+}
 
 function RadioGroup({ options, value, onChange, name }) {
   return (
@@ -344,9 +676,9 @@ function FileUploadField({ label, fieldKey, value, onChange }) {
         className={`upload-area${value ? " has-file" : ""}`}
         onClick={() => ref.current.click()}
       >
-        <div className="upload-icon">{value ? "✅" : "📷"}</div>
+        <div className="upload-icon">{value ? "OK" : "+"}</div>
         <div className="upload-text">
-          {value ? <strong>{value.name}</strong> : <><strong>Tap to upload photo</strong><br />JPG, PNG or HEIC</>}
+          {value ? <strong>{value.name}</strong> : <><strong>{label}</strong><span>Photo not selected</span></>}
         </div>
         <input
           ref={ref}
@@ -387,15 +719,11 @@ function LoginScreen({ onLogin }) {
     <div className="login-screen">
       <div className="login-card">
         <div className="login-logo-row">
-          <div className="login-logo-badge">FNB</div>
-          <div className="login-logo-text">
-            <div><span>PnP FNB</span> Campaign</div>
-            <div style={{ fontWeight: 400, fontSize: 12, color: "#888" }}>Promoter Survey 2026</div>
-          </div>
+          <BrandLockup />
         </div>
         <div className="login-title">Welcome back</div>
         <div className="login-sub">Sign in to capture customer interactions</div>
-        {error && <div className="login-error">⚠️ {error}</div>}
+        {error && <div className="login-error">{error}</div>}
         <div className="field-group">
           <label>Email Address</label>
           <input
@@ -417,11 +745,8 @@ function LoginScreen({ onLogin }) {
           />
         </div>
         <button className="btn-primary" onClick={handleLogin} disabled={loading || !email || !password}>
-          {loading ? "Signing in..." : "Sign In →"}
+          {loading ? "Signing in..." : "Sign In"}
         </button>
-        <div style={{ marginTop: 16, fontSize: 12, color: "#bbb", textAlign: "center" }}>
-          M2M PicknPay FNB Campaign 2026
-        </div>
       </div>
     </div>
   );
@@ -450,25 +775,117 @@ function SurveyForm({ user, onSuccess, sessionCount }) {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState(null);
+  const [activeStep, setActiveStep] = useState(0);
 
   const set = (key, val) => setForm(f => ({ ...f, [key]: val }));
   const setFile = (key, val) => setForm(f => ({ ...f, [key]: val }));
+  const steps = form.taskType === "Daily Admin"
+    ? SURVEY_STEPS
+    : SURVEY_STEPS.filter(step => step.id !== "photos");
+  const activeStepId = steps[activeStep]?.id || steps[0].id;
 
   const showToast = (msg, type = "success") => {
     setToast({ msg, type });
     setTimeout(() => setToast(null), 3500);
   };
 
-  const validate = () => {
+  useEffect(() => {
+    if (activeStep >= steps.length) {
+      setActiveStep(steps.length - 1);
+    }
+  }, [activeStep, steps.length]);
+
+  const handleTaskTypeChange = (value) => {
+    setForm(f => ({
+      ...f,
+      taskType: value,
+      ...(value === "Daily Admin" ? {} : {
+        uploadStorePhoto: "",
+        photoUpload: null,
+        promoterPhoto: null,
+        fnbStaffPhoto: null,
+        burgerFridayPhoto: null,
+      }),
+    }));
+  };
+
+  const resetForm = () => {
+    setForm({
+      taskType: "Customer Interaction",
+      firstName: "",
+      surname: "",
+      contactNumber: "",
+      emailAddress: "",
+      currentlyFNB: "",
+      fnbAccount: "",
+      bankWith: "",
+      uploadStorePhoto: "",
+      photoUpload: null,
+      promoterPhoto: null,
+      fnbStaffPhoto: null,
+      burgerFridayPhoto: null,
+      handoverStatus: "",
+      ifNoWhyNot: "",
+      currentFNBUser: "",
+    });
+    setErrors({});
+    setActiveStep(0);
+  };
+
+  const getStepErrors = (stepId) => {
     const e = {};
-    if (!form.firstName.trim()) e.firstName = true;
-    if (!form.contactNumber.trim()) e.contactNumber = true;
-    if (!form.currentlyFNB) e.currentlyFNB = true;
-    if (form.currentlyFNB === "Yes" && !form.fnbAccount) e.fnbAccount = true;
-    if (form.currentlyFNB === "No" && !form.bankWith) e.bankWith = true;
-    if (!form.handoverStatus) e.handoverStatus = true;
+    if (stepId === "customer" || stepId === "review") {
+      if (!form.firstName.trim()) e.firstName = true;
+      if (!form.contactNumber.trim()) e.contactNumber = true;
+    }
+    if (stepId === "banking" || stepId === "review") {
+      if (!form.currentlyFNB) e.currentlyFNB = true;
+      if (form.currentlyFNB === "Yes" && !form.fnbAccount) e.fnbAccount = true;
+      if (form.currentlyFNB === "No" && !form.bankWith) e.bankWith = true;
+    }
+    if (stepId === "handover" || stepId === "review") {
+      if (!form.handoverStatus) e.handoverStatus = true;
+    }
+    return e;
+  };
+
+  const firstStepWithErrors = (e) => {
+    const targetId =
+      e.firstName || e.contactNumber ? "customer" :
+      e.currentlyFNB || e.fnbAccount || e.bankWith ? "banking" :
+      e.handoverStatus ? "handover" :
+      "review";
+    return Math.max(0, steps.findIndex(step => step.id === targetId));
+  };
+
+  const validateStep = (stepId = activeStepId) => {
+    const e = getStepErrors(stepId);
     setErrors(e);
     return Object.keys(e).length === 0;
+  };
+
+  const validate = () => {
+    const e = getStepErrors("review");
+    setErrors(e);
+    if (Object.keys(e).length > 0) {
+      setActiveStep(firstStepWithErrors(e));
+      return false;
+    }
+    return true;
+  };
+
+  const handleNext = () => {
+    if (!validateStep(activeStepId)) {
+      showToast("Please complete the required fields on this step", "error");
+      return;
+    }
+    setActiveStep(step => Math.min(step + 1, steps.length - 1));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleBack = () => {
+    setActiveStep(step => Math.max(step - 1, 0));
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleSubmit = async () => {
@@ -481,7 +898,6 @@ function SurveyForm({ user, onSuccess, sessionCount }) {
       // Build row payload matching CSV columns
       const rowData = {
         survey: "PnP FNB Campaign 2026",
-        record_id: crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2),
         timestamp: new Date().toISOString().replace("T", " ").substring(0, 19),
         mobile_user: user.userName,
         mobile_user_role: user.role,
@@ -518,7 +934,7 @@ function SurveyForm({ user, onSuccess, sessionCount }) {
       if (!res.ok || json.status === false) {
         throw new Error(json.message || `HTTP ${res.status}`);
       }
-      showToast("✓ Record submitted to Zoho Analytics!");
+      showToast("Record submitted to Zoho Analytics");
       setTimeout(() => onSuccess(), 700);
     } catch (err) {
       showToast("Submission failed: " + err.message, "error");
@@ -528,221 +944,285 @@ function SurveyForm({ user, onSuccess, sessionCount }) {
 
   const isFNBUser = form.currentlyFNB === "Yes";
   const isNotFNBUser = form.currentlyFNB === "No";
-  const handoverDone = form.handoverStatus && form.handoverStatus !== "Customer Not Interested" && form.handoverStatus !== "Customer not handed over";
+  const isDailyAdmin = form.taskType === "Daily Admin";
+  const progress = Math.round(((activeStep + 1) / steps.length) * 100);
+  const reviewItems = [
+    ["Task Type", form.taskType || "Not selected"],
+    ["Store", user.userName],
+    ["Region", user.region || "Not set"],
+    ["Customer", [form.firstName, form.surname].filter(Boolean).join(" ") || "Missing"],
+    ["Contact", form.contactNumber || "Missing"],
+    ["FNB User", form.currentlyFNB || "Missing"],
+    ["Account / Bank", form.fnbAccount || form.bankWith || "Not selected"],
+    ["Handover", form.handoverStatus || "Missing"],
+    ...(isDailyAdmin ? [["Photos", form.uploadStorePhoto === "Yes" ? "Selected for upload" : "No store photo"]] : []),
+  ];
 
   return (
     <div className="main-body">
-      {/* Header */}
-      <div className="page-header">
-        <h1>Customer Interaction</h1>
-        <p>PnP FNB Campaign 2026 · {user.userName}</p>
-      </div>
-
-      {/* Stats */}
-      <div className="stats-bar">
-        <div className="stat-chip">
-          <div className="stat-num">{sessionCount}</div>
-          <div className="stat-lbl">This Session</div>
-        </div>
-        <div className="stat-chip">
-          <div className="stat-num">{user.region || "N/A"}</div>
-          <div className="stat-lbl">Region</div>
-        </div>
-        <div className="stat-chip">
-          <div className="stat-num">PnP</div>
-          <div className="stat-lbl">Principal</div>
-        </div>
-      </div>
-
-      {/* Section 1 - Task Type */}
-      <div className="card">
-        <div className="card-section-title">Task Type</div>
-        <div className="f-group">
-          <span className="f-label">Select Task Type <span className="f-required">*</span></span>
-          <RadioGroup
-            options={["Customer Interaction", "Daily Admin"]}
-            value={form.taskType}
-            onChange={v => set("taskType", v)}
-          />
-        </div>
-      </div>
-
-      {/* Section 2 - Customer Details */}
-      <div className="card">
-        <div className="card-section-title">Customer Details</div>
-        <div className="form-grid">
-          <div className="f-group">
-            <span className="f-label">First Name <span className="f-required">*</span></span>
-            <input
-              className={`f-input${errors.firstName ? " error" : ""}`}
-              placeholder="Enter first name"
-              value={form.firstName}
-              onChange={e => set("firstName", e.target.value)}
-            />
+      <div className="survey-shell">
+        <aside className="survey-aside">
+          <div className="page-header">
+            <div className="eyebrow">Live capture</div>
+            <h1>Customer Interaction</h1>
+            <p>PnP FNB Campaign 2026 for {user.userName}</p>
           </div>
-          <div className="f-group">
-            <span className="f-label">Surname</span>
-            <input
-              className="f-input"
-              placeholder="Enter surname"
-              value={form.surname}
-              onChange={e => set("surname", e.target.value)}
-            />
+
+          <div className="stats-bar">
+            <div className="stat-chip">
+              <div className="stat-num">{sessionCount}</div>
+              <div className="stat-lbl">This Session</div>
+            </div>
+            <div className="stat-chip">
+              <div className="stat-num">{user.region || "N/A"}</div>
+              <div className="stat-lbl">Region</div>
+            </div>
+            <div className="stat-chip">
+              <div className="stat-num">PnP</div>
+              <div className="stat-lbl">Principal</div>
+            </div>
           </div>
-          <div className="f-group">
-            <span className="f-label">Contact Number <span className="f-required">*</span></span>
-            <input
-              className={`f-input${errors.contactNumber ? " error" : ""}`}
-              type="tel"
-              placeholder="0XX XXX XXXX"
-              value={form.contactNumber}
-              onChange={e => set("contactNumber", e.target.value)}
-            />
+
+          <div className="prog-bar-wrap">
+            <div className="prog-bar" style={{ width: `${progress}%` }} />
           </div>
-          <div className="f-group">
-            <span className="f-label">Email Address</span>
-            <input
-              className="f-input"
-              type="email"
-              placeholder="customer@email.com"
-              value={form.emailAddress}
-              onChange={e => set("emailAddress", e.target.value)}
-            />
+          <div className="prog-label">{progress}% complete</div>
+
+          <div className="step-tabs">
+            {steps.map((step, index) => (
+              <button
+                key={step.id}
+                type="button"
+                className={`step-tab${activeStep === index ? " active" : ""}`}
+                onClick={() => setActiveStep(index)}
+              >
+                <span className="step-index">{index + 1}</span>
+                <span className="step-title">{step.label}</span>
+              </button>
+            ))}
+          </div>
+        </aside>
+
+        <div className="step-panel">
+          <div className="mobile-step-header">
+            <div className="mobile-step-title">
+              <strong>{steps[activeStep]?.label}</strong>
+              <span>{activeStep + 1} / {steps.length}</span>
+            </div>
+            <div className="prog-bar-wrap">
+              <div className="prog-bar" style={{ width: `${progress}%` }} />
+            </div>
+          </div>
+
+          {activeStepId === "task" && (
+            <div className="card">
+              <div className="card-section-title">Task Type</div>
+              <div className="f-group">
+                <span className="f-label">Select Task Type <span className="f-required">*</span></span>
+                <RadioGroup
+                  options={["Customer Interaction", "Daily Admin"]}
+                  value={form.taskType}
+                  onChange={handleTaskTypeChange}
+                />
+              </div>
+            </div>
+          )}
+
+          {activeStepId === "customer" && (
+            <div className="card">
+              <div className="card-section-title">Customer Details</div>
+              <div className="form-grid">
+                <div className="f-group">
+                  <span className="f-label">First Name <span className="f-required">*</span></span>
+                  <input
+                    className={`f-input${errors.firstName ? " error" : ""}`}
+                    placeholder="Enter first name"
+                    value={form.firstName}
+                    onChange={e => set("firstName", e.target.value)}
+                  />
+                  {errors.firstName && <span className="f-error">First name is required</span>}
+                </div>
+                <div className="f-group">
+                  <span className="f-label">Surname</span>
+                  <input
+                    className="f-input"
+                    placeholder="Enter surname"
+                    value={form.surname}
+                    onChange={e => set("surname", e.target.value)}
+                  />
+                </div>
+                <div className="f-group">
+                  <span className="f-label">Contact Number <span className="f-required">*</span></span>
+                  <input
+                    className={`f-input${errors.contactNumber ? " error" : ""}`}
+                    type="tel"
+                    placeholder="0XX XXX XXXX"
+                    value={form.contactNumber}
+                    onChange={e => set("contactNumber", e.target.value)}
+                  />
+                  {errors.contactNumber && <span className="f-error">Contact number is required</span>}
+                </div>
+                <div className="f-group">
+                  <span className="f-label">Email Address</span>
+                  <input
+                    className="f-input"
+                    type="email"
+                    placeholder="customer@email.com"
+                    value={form.emailAddress}
+                    onChange={e => set("emailAddress", e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeStepId === "banking" && (
+            <div className="card">
+              <div className="card-section-title">Banking Status</div>
+              <div className="f-group">
+                <span className="f-label">Are you a current FNB user? <span className="f-required">*</span></span>
+                <RadioGroup
+                  options={["Yes", "No"]}
+                  value={form.currentlyFNB}
+                  onChange={v => { set("currentlyFNB", v); set("currentFNBUser", v); }}
+                />
+                {errors.currentlyFNB && <span className="f-error">Select Yes or No</span>}
+              </div>
+
+              {isFNBUser && (
+                <div className="f-group block-gap">
+                  <span className="f-label">Which FNB Account do you have? <span className="f-required">*</span></span>
+                  <RadioGroup
+                    options={["FNB Easy", "FNB Aspire", "FNB Premier"]}
+                    value={form.fnbAccount}
+                    onChange={v => set("fnbAccount", v)}
+                  />
+                  {errors.fnbAccount && <span className="f-error">Select an account</span>}
+                </div>
+              )}
+
+              {isNotFNBUser && (
+                <div className="f-group block-gap">
+                  <span className="f-label">Which bank do you bank with? <span className="f-required">*</span></span>
+                  <RadioGroup
+                    options={["Capitec", "Standard Bank", "ABSA", "Nedbank", "Tyme Bank", "African Bank", "Discovery Bank", "Bank Zero", "Old Mutual", "Investec"]}
+                    value={form.bankWith}
+                    onChange={v => set("bankWith", v)}
+                  />
+                  {errors.bankWith && <span className="f-error">Select a bank</span>}
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeStepId === "handover" && (
+            <div className="card">
+              <div className="card-section-title">Handover & Outcome</div>
+              <div className="f-group">
+                <span className="f-label">Handover Status <span className="f-required">*</span></span>
+                <RadioGroup
+                  options={[
+                    "Handed Over To FNB Consultant for sign up",
+                    "scanned QR code on customers phone",
+                    "scanned QR code on promoters phone",
+                    "Customer Not Interested",
+                    "Customer not handed over",
+                  ]}
+                  value={form.handoverStatus}
+                  onChange={v => set("handoverStatus", v)}
+                />
+                {errors.handoverStatus && <span className="f-error">Select handover status</span>}
+              </div>
+
+              {(form.handoverStatus === "Customer Not Interested" || form.handoverStatus === "Customer not handed over") && (
+                <div className="f-group block-gap">
+                  <span className="f-label">If not handed over, why not?</span>
+                  <textarea
+                    className="f-textarea"
+                    placeholder="Explain why the customer was not handed over"
+                    value={form.ifNoWhyNot}
+                    onChange={e => set("ifNoWhyNot", e.target.value)}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeStepId === "photos" && isDailyAdmin && (
+            <div className="card">
+              <div className="card-section-title">Store Photos</div>
+              <div className="f-group">
+                <span className="f-label">Upload store photos?</span>
+                <RadioGroup
+                  options={["Yes", "No"]}
+                  value={form.uploadStorePhoto}
+                  onChange={v => set("uploadStorePhoto", v)}
+                />
+              </div>
+              {form.uploadStorePhoto === "Yes" && (
+                <div className="form-grid" style={{ marginTop: 16 }}>
+                  <FileUploadField
+                    label="Store Photo"
+                    fieldKey="photoUpload"
+                    value={form.photoUpload}
+                    onChange={setFile}
+                  />
+                  <FileUploadField
+                    label="Promoter with T-shirt and A3 Print Out"
+                    fieldKey="promoterPhoto"
+                    value={form.promoterPhoto}
+                    onChange={setFile}
+                  />
+                  <FileUploadField
+                    label="FNB Staff On Site"
+                    fieldKey="fnbStaffPhoto"
+                    value={form.fnbStaffPhoto}
+                    onChange={setFile}
+                  />
+                  <FileUploadField
+                    label="Burger Friday Set Up"
+                    fieldKey="burgerFridayPhoto"
+                    value={form.burgerFridayPhoto}
+                    onChange={setFile}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeStepId === "review" && (
+            <div className="card">
+              <div className="card-section-title">Review Record</div>
+              <div className="review-grid">
+                {reviewItems.map(([label, value]) => (
+                  <div className="review-item" key={label}>
+                    <div className="review-label">{label}</div>
+                    <div className="review-value">{value}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="submit-row">
+            <button
+              className="btn-secondary"
+              type="button"
+              onClick={activeStep === 0 ? resetForm : handleBack}
+            >
+              {activeStep === 0 ? "Clear" : "Back"}
+            </button>
+            {activeStep < steps.length - 1 ? (
+              <button className="btn-submit" type="button" onClick={handleNext}>
+                Next
+              </button>
+            ) : (
+              <button className="btn-submit" type="button" onClick={handleSubmit} disabled={submitting}>
+                {submitting ? <><span className="spin">...</span>Submitting</> : "Submit Record"}
+              </button>
+            )}
           </div>
         </div>
-      </div>
-
-      {/* Section 3 - FNB Banking Status */}
-      <div className="card">
-        <div className="card-section-title">Banking Status</div>
-        <div className="f-group" style={{ marginBottom: 18 }}>
-          <span className="f-label">Are you a current FNB user? <span className="f-required">*</span></span>
-          <RadioGroup
-            options={["Yes", "No"]}
-            value={form.currentlyFNB}
-            onChange={v => { set("currentlyFNB", v); set("currentFNBUser", v); }}
-          />
-          {errors.currentlyFNB && <span style={{ color: "var(--fnb-red)", fontSize: 12 }}>Please select an option</span>}
-        </div>
-
-        {isFNBUser && (
-          <div className="f-group">
-            <span className="f-label">Which FNB Account do you have? <span className="f-required">*</span></span>
-            <RadioGroup
-              options={["FNB Easy", "FNB Aspire", "FNB Premier"]}
-              value={form.fnbAccount}
-              onChange={v => set("fnbAccount", v)}
-            />
-            {errors.fnbAccount && <span style={{ color: "var(--fnb-red)", fontSize: 12 }}>Please select an account</span>}
-          </div>
-        )}
-
-        {isNotFNBUser && (
-          <div className="f-group">
-            <span className="f-label">Which bank do you bank with? <span className="f-required">*</span></span>
-            <RadioGroup
-              options={["Capitec", "Standard Bank", "ABSA", "Nedbank", "Tyme Bank", "African Bank", "Discovery Bank", "Bank Zero", "Old Mutual", "Investec"]}
-              value={form.bankWith}
-              onChange={v => set("bankWith", v)}
-            />
-            {errors.bankWith && <span style={{ color: "var(--fnb-red)", fontSize: 12 }}>Please select a bank</span>}
-          </div>
-        )}
-      </div>
-
-      {/* Section 4 - Handover */}
-      <div className="card">
-        <div className="card-section-title">Handover & Outcome</div>
-        <div className="f-group" style={{ marginBottom: 18 }}>
-          <span className="f-label">Handover Status <span className="f-required">*</span></span>
-          <RadioGroup
-            options={[
-              "Handed Over To FNB Consultant for sign up",
-              "scanned QR code on customers phone",
-              "scanned QR code on promoters phone",
-              "Customer Not Interested",
-              "Customer not handed over",
-            ]}
-            value={form.handoverStatus}
-            onChange={v => set("handoverStatus", v)}
-          />
-          {errors.handoverStatus && <span style={{ color: "var(--fnb-red)", fontSize: 12 }}>Please select handover status</span>}
-        </div>
-
-        {(form.handoverStatus === "Customer Not Interested" || form.handoverStatus === "Customer not handed over") && (
-          <div className="f-group">
-            <span className="f-label">If not handed over, why not?</span>
-            <textarea
-              className="f-textarea"
-              placeholder="Explain why the customer was not handed over..."
-              value={form.ifNoWhyNot}
-              onChange={e => set("ifNoWhyNot", e.target.value)}
-            />
-          </div>
-        )}
-      </div>
-
-      {/* Section 5 - Photos */}
-      <div className="card">
-        <div className="card-section-title">Store Photos</div>
-        <div className="f-group" style={{ marginBottom: 14 }}>
-          <span className="f-label">Do you want to upload a store photo?</span>
-          <RadioGroup
-            options={["Yes", "No"]}
-            value={form.uploadStorePhoto}
-            onChange={v => set("uploadStorePhoto", v)}
-          />
-        </div>
-        {form.uploadStorePhoto === "Yes" && (
-          <div className="form-grid">
-            <FileUploadField
-              label="📸 Store Photo"
-              fieldKey="photoUpload"
-              value={form.photoUpload}
-              onChange={setFile}
-            />
-            <FileUploadField
-              label="🧑 Promoter with T-shirt & A3 Print Out"
-              fieldKey="promoterPhoto"
-              value={form.promoterPhoto}
-              onChange={setFile}
-            />
-            <FileUploadField
-              label="🏦 FNB Staff On Site"
-              fieldKey="fnbStaffPhoto"
-              value={form.fnbStaffPhoto}
-              onChange={setFile}
-            />
-            <FileUploadField
-              label="🍔 Burger Friday Set Up"
-              fieldKey="burgerFridayPhoto"
-              value={form.burgerFridayPhoto}
-              onChange={setFile}
-            />
-          </div>
-        )}
-      </div>
-
-      {/* Submit */}
-      <div className="submit-row">
-        <button
-          className="btn-secondary"
-          onClick={() => {
-            setForm({
-              taskType: "Customer Interaction", firstName: "", surname: "",
-              contactNumber: "", emailAddress: "", currentlyFNB: "", fnbAccount: "",
-              bankWith: "", uploadStorePhoto: "", photoUpload: null, promoterPhoto: null,
-              fnbStaffPhoto: null, burgerFridayPhoto: null, handoverStatus: "",
-              ifNoWhyNot: "", currentFNBUser: "",
-            });
-            setErrors({});
-          }}
-        >
-          Clear Form
-        </button>
-        <button className="btn-submit" onClick={handleSubmit} disabled={submitting}>
-          {submitting ? <><span className="spin">⟳</span> Submitting...</> : <>Submit Record →</>}
-        </button>
       </div>
 
       {toast && <div className={`toast ${toast.type}`}>{toast.msg}</div>}
@@ -755,7 +1235,7 @@ function SuccessScreen({ onNext, user, count }) {
   return (
     <div className="main-body">
       <div className="success-screen">
-        <div className="success-icon">✅</div>
+        <div className="success-icon">OK</div>
         <h2>Submission Complete!</h2>
         <p>Customer interaction recorded successfully for <strong>{user.userName}</strong>.</p>
         <div className="stats-bar" style={{ justifyContent: "center", margin: "0 auto 28px" }}>
@@ -803,8 +1283,7 @@ export default function App() {
     <div className="app-wrap">
       <nav className="topnav">
         <div className="nav-brand">
-          <div className="nav-badge">FNB</div>
-          <div className="nav-title"><span>PnP FNB</span> Campaign 2026</div>
+          <BrandLockup />
         </div>
         <div className="nav-right">
           <span className="nav-user">Logged in as <strong>{user.userName}</strong></span>

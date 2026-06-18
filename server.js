@@ -6,6 +6,8 @@
 const express  = require("express");
 const cors     = require("cors");
 const axios    = require("axios");
+const crypto   = require("crypto");
+const { Pool } = require("pg");
 require("dotenv").config();
 
 const app = express();
@@ -25,9 +27,12 @@ const {
   ZOHO_WORKSPACE_ID,
   // Map survey names → Zoho View IDs
   ZOHO_VIEW_ID_PNP_FNB,     // PnP FNB Campaign 2026 table
+  DATABASE_URL,
 } = process.env;
 
 const PORT = process.env.PORT || 3000;
+const RECORD_ID_START = Number.parseInt(process.env.RECORD_ID_START || "14119331", 10);
+const REQUIRE_SEQUENTIAL_RECORD_ID = process.env.REQUIRE_SEQUENTIAL_RECORD_ID === "true";
 
 // ── Survey → View ID lookup ───────────────────────────────────────
 const SURVEY_VIEW_MAP = {
@@ -39,6 +44,75 @@ const SURVEY_VIEW_MAP = {
 // ── Zoho token cache (refresh_token → access_token, lasts 1hr) ───
 let _zohoToken     = null;
 let _zohoTokenExp  = 0;
+
+// ── Sequential record IDs (safe across concurrent Railway requests) ───
+// Requires a persistent PostgreSQL DATABASE_URL. Without it, the API falls
+// back to a UUID so local/dev submissions still work, but production should
+// set REQUIRE_SEQUENTIAL_RECORD_ID=true.
+const pgPool = DATABASE_URL
+  ? new Pool({
+      connectionString: DATABASE_URL,
+      ssl: process.env.PGSSL === "true" ? { rejectUnauthorized: false } : undefined,
+    })
+  : null;
+
+let _recordIdCounterReady = null;
+let _warnedRecordIdFallback = false;
+
+async function ensureRecordIdCounter() {
+  if (!pgPool) return;
+  if (_recordIdCounterReady) return _recordIdCounterReady;
+
+  _recordIdCounterReady = (async () => {
+    if (!Number.isSafeInteger(RECORD_ID_START) || RECORD_ID_START <= 0) {
+      throw new Error("RECORD_ID_START must be a positive safe integer");
+    }
+
+    await pgPool.query(`
+      CREATE TABLE IF NOT EXISTS survey_record_id_counter (
+        name TEXT PRIMARY KEY,
+        last_value BIGINT NOT NULL
+      )
+    `);
+
+    await pgPool.query(
+      `
+        INSERT INTO survey_record_id_counter (name, last_value)
+        VALUES ($1, $2)
+        ON CONFLICT (name) DO NOTHING
+      `,
+      ["default", RECORD_ID_START - 1]
+    );
+  })();
+
+  return _recordIdCounterReady;
+}
+
+async function getNextRecordId() {
+  if (!pgPool) {
+    if (REQUIRE_SEQUENTIAL_RECORD_ID) {
+      throw new Error("DATABASE_URL is required for sequential record IDs");
+    }
+    if (!_warnedRecordIdFallback) {
+      console.warn("[survey-api] DATABASE_URL not set; using UUID record_id fallback");
+      _warnedRecordIdFallback = true;
+    }
+    return crypto.randomUUID();
+  }
+
+  await ensureRecordIdCounter();
+  const result = await pgPool.query(
+    `
+      UPDATE survey_record_id_counter
+      SET last_value = last_value + 1
+      WHERE name = $1
+      RETURNING last_value
+    `,
+    ["default"]
+  );
+
+  return String(result.rows[0].last_value);
+}
 
 async function getZohoAccessToken() {
   if (_zohoToken && Date.now() < _zohoTokenExp) return _zohoToken;
@@ -90,6 +164,7 @@ app.post("/api/form_master_uploads/zoho", async (req, res) => {
     //    Accepts flat JSON body – all keys map directly to Zoho column names
     const columns = { ...req.body };
     delete columns.survey; // don't write the survey param as a column
+    columns.record_id = await getNextRecordId();
 
     // Ensure timestamp exists
     if (!columns.timestamp) {
