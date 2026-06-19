@@ -879,7 +879,12 @@ function SurveyForm({ user, onSuccess, sessionCount }) {
       showToast("Please complete the required fields on this step", "error");
       return;
     }
-    setActiveStep(step => Math.min(step + 1, steps.length - 1));
+    if (activeStepId === "handover" && form.handoverStatus === "Customer is already with FNB") {
+      const reviewIdx = steps.findIndex(s => s.id === "review");
+      setActiveStep(reviewIdx >= 0 ? reviewIdx : steps.length - 1);
+    } else {
+      setActiveStep(step => Math.min(step + 1, steps.length - 1));
+    }
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -1127,12 +1132,22 @@ function SurveyForm({ user, onSuccess, sessionCount }) {
                     "scanned QR code on promoters phone",
                     "Customer Not Interested",
                     "Customer not handed over",
+                    "Customer is already with FNB",
                   ]}
                   value={form.handoverStatus}
                   onChange={v => set("handoverStatus", v)}
                 />
                 {errors.handoverStatus && <span className="f-error">Select handover status</span>}
               </div>
+
+              {form.handoverStatus === "Customer is already with FNB" && (
+                <div className="f-group block-gap" style={{ background: "#fef3f2", border: "1px solid #e8c5c0", borderRadius: 8, padding: 16 }}>
+                  <span className="f-label" style={{ color: "#b71c1c", fontWeight: 600 }}>Customer already with FNB</span>
+                  <p style={{ margin: "4px 0 0", fontSize: 14, color: "#555" }}>
+                    This customer is already an FNB client. No further handover is required.
+                  </p>
+                </div>
+              )}
 
               {(form.handoverStatus === "Customer Not Interested" || form.handoverStatus === "Customer not handed over") && (
                 <div className="f-group block-gap">
